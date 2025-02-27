@@ -9,8 +9,9 @@ import SwiftUI
 
 @main
 struct AirlabPlaywingTestTaskApp: App {
+    
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("Airlab & Playwing Test Task"){
             ContentView()
         }
     }

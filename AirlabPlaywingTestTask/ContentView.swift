@@ -6,20 +6,45 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct ContentView: View {
+    
+    @State var runCamera: Bool = false
+    @StateObject private var videoDevices = CameraListViewModel()
+    @StateObject private var cameraManager = CameraManager()
+    
     var body: some View {
         VStack {
-            Image(systemName: "web.camera")
+            HeaderView(runCamera: $runCamera, cameras: $videoDevices.cameras)
+            Spacer()
+            if runCamera {
+                CameraView(session: cameraManager.session)
+                    .frame(width: 640, height: 480)
+                    .padding(.bottom, 20)
+            } else {
+                aboutView
+            }
+            Spacer()
+        }
+        .onChange(of: runCamera, {
+            if runCamera {
+                cameraManager.startSession()
+            } else {
+                cameraManager.stopSession()
+            }
+        })
+    }
+    
+    var aboutView: some View {
+        VStack {
+            Image(systemName: "camera")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 35, height: 35)
+                .frame(width: 100, height: 100)
                 .foregroundStyle(.tint)
-                .padding(.bottom, 20)
-            Text("Airlab & Playwing")
-                .font(.title2)
+                .padding(.bottom, 50)
         }
-        .padding(25)
     }
 }
 
