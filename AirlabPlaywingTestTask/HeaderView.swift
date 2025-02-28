@@ -11,7 +11,8 @@ import AVFoundation
 struct HeaderView: View {
     @Binding var runCamera: Bool
     @Binding var cameras: [AVCaptureDevice]
-    @AppStorage("selectedCameraUUID") var selectedCameraUUID: String = "" 
+    @Binding var blackWhite: Bool
+    @StateObject var settings = AppSettings()
     
     var body: some View {
         HStack {
@@ -25,7 +26,12 @@ struct HeaderView: View {
             .padding(.leading, 25)
             .help("Start/stop camera")
             
+            Toggle("B/W mode", isOn: $blackWhite)
+                .focusable(false)
+                .padding(.leading, 10)
+            
             Spacer()
+            Text("Selected camera:")
             Menu {
                 camerasList()
             } label: {
@@ -51,8 +57,7 @@ struct HeaderView: View {
         VStack {
             ForEach(cameras.indices, id: \.self) { index in
                 Button {
-                    selectedCameraUUID = cameras[index].uniqueID
-                    print(">> \(selectedCameraUUID)")
+                    settings.selectedID = cameras[index].uniqueID
                 } label: {
                     cameraLabel(camera: cameras[index])
                 }
@@ -61,7 +66,7 @@ struct HeaderView: View {
     }
     
     var selectedCamera: some View  {
-        if let index = cameras.firstIndex(where: { $0.uniqueID == selectedCameraUUID }) {
+        if let index = cameras.firstIndex(where: { $0.uniqueID == settings.selectedID }) {
             let camera = cameras[index]
             return cameraLabel(camera: camera)
         } else {

@@ -6,50 +6,72 @@
 //
 
 import AVFoundation
+import SwiftUI
 import Combine
 
 class CameraManager: ObservableObject {
     let session = AVCaptureSession()
-    
-    private var isSessionConfigured = false
-    private var isSessionRunning = false
+    var isSessionConfigured = false
+    var isSessionRunning = false
+    var selectedID: String?
     
     init() {
         // You can configure immediately, or lazily before startSession()
-        configureSession()
+         configureSession()
     }
     
-    private func configureSession() {
-        session.sessionPreset = .high
-
-        // Example: set up the default camera input
+    private var defaultDevice: AVCaptureDevice? {
         guard let device = AVCaptureDevice.default(
             .builtInWideAngleCamera,
             for: .video,
             position: .unspecified
         ) else {
-            print("No camera found.")
-            return
+            print(">> no camera found.")
+            return nil
         }
+        return device
+    }
+    
+    private var selectedDevice: AVCaptureDevice? {
+        let discoverySession = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.builtInWideAngleCamera, .external],
+            mediaType: .video,
+            position: .unspecified
+        )
+        let devices = discoverySession.devices
+
+        if let device = devices.first(where: { $0.uniqueID == selectedID }) {
+            return device
+        } else {
+            return nil
+        }
+    }
+    
+    func configureSession() {
+        session.sessionPreset = .high
+        session.beginConfiguration()
         
         do {
-            let input = try AVCaptureDeviceInput(device: device)
-            
-            if session.canAddInput(input) {
-                session.addInput(input)
+            // Add video input
+            let videoInput = try AVCaptureDeviceInput(device: selectedDevice ?? defaultDevice!)
+            if session.canAddInput(videoInput) {
+                session.addInput(videoInput)
             }
             
-            // Optionally add audio input
-            if let audioDevice = AVCaptureDevice.default(for: .audio) {
+            // Add audio input only if authorized
+            if AVCaptureDevice.authorizationStatus(for: .audio) == .authorized,
+               let audioDevice = AVCaptureDevice.default(for: .audio) {
                 let audioInput = try AVCaptureDeviceInput(device: audioDevice)
                 if session.canAddInput(audioInput) {
                     session.addInput(audioInput)
                 }
             }
             
+            session.commitConfiguration()
             isSessionConfigured = true
         } catch {
-            print("Error configuring session: \(error)")
+            session.commitConfiguration()
+            print(">> error configuring session: \(error)")
         }
     }
     
@@ -57,17 +79,28 @@ class CameraManager: ObservableObject {
         guard isSessionConfigured, !isSessionRunning else { return }
         session.startRunning()
         isSessionRunning = true
+        print(">> session started")
     }
     
     func stopSession() {
         guard isSessionRunning else { return }
         session.stopRunning()
         isSessionRunning = false
+        print(">> session stoped")
     }
     
     func restartSession() {
         stopSession()
-        // If you wanted to switch camera or re-configure, do that here
+        
+        session.beginConfiguration()
+        // Remove existing inputs
+        for input in session.inputs {
+            session.removeInput(input)
+        }
+        session.commitConfiguration()
+        
+        // Reconfigure the session with new inputs
+        configureSession()
         startSession()
     }
 }
