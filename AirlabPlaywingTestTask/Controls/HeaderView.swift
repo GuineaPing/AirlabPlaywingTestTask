@@ -12,26 +12,39 @@ struct HeaderView: View {
     @Binding var runCamera: Bool
     @Binding var cameras: [AVCaptureDevice]
     @Binding var blackWhite: Bool
+    @Binding var saveVideo: Bool
     @StateObject var settings = AppSettings()
     
     var body: some View {
         HStack {
+            Spacer().frame(width: 25)
+            
             Button {
                 runCamera.toggle()
             } label: {
                 Image(systemName: runCamera ? "stop.fill" : "play.fill")
+                    .font(.title)
             }
             .focusable(false)
             .buttonStyle(.borderless)
-            .padding(.leading, 25)
+            .padding(.horizontal, 25)
             .help("Start/stop camera")
             
             Toggle("B/W mode", isOn: $blackWhite)
                 .focusable(false)
-                .padding(.leading, 10)
+                .padding(.horizontal, 10)
+                .disabled(saveVideo)
+            
+            Toggle("Save", isOn: $saveVideo)
+                .focusable(false)
+                .padding(.horizontal, 10)
+                .disabled(blackWhite || runCamera)
             
             Spacer()
+            
             Text("Selected camera:")
+                .foregroundStyle(.gray)
+            
             Menu {
                 camerasList()
             } label: {
@@ -48,6 +61,7 @@ struct HeaderView: View {
         .frame(height: 35)
         .background(.clear)
         .padding(.bottom, 0)
+
         Divider()
             .foregroundStyle(.gray)
             .padding(.top, -5)

@@ -9,10 +9,12 @@ import SwiftUI
 import AppKit
 
 struct CameraProcessingView: NSViewRepresentable {
-    let cameraProcessingController = CameraProcessingController()
+    let cameraProcessingController = CameraProcessingManager()
     @State var selectedID: String?
+    @State var isRun: Bool
     
     func makeNSView(context: Context) -> NSImageView {
+        cameraProcessingController.isRun = isRun
         cameraProcessingController.selectedID = selectedID
         let imageView = NonInteractiveImageView()
         imageView.imageScaling = .scaleAxesIndependently
