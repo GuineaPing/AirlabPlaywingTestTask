@@ -11,7 +11,7 @@ import SwiftUI
 struct AirlabPlaywingTestTaskApp: App {
     
     var body: some Scene {
-        WindowGroup("Airlab & Playwing Test Task"){
+        WindowGroup("Test Task"){
             ContentView()
         }
     }

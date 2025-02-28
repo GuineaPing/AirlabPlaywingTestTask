@@ -10,10 +10,11 @@ import AVFoundation
 
 struct HeaderView: View {
     @Binding var runCamera: Bool
-    @Binding var cameras: [AVCaptureDevice]
     @Binding var blackWhite: Bool
     @Binding var saveVideo: Bool
     @StateObject var settings = AppSettings()
+    @State private var cameras: [AVCaptureDevice] = []
+    @StateObject private var videoDevices = CameraListViewModel()
     
     var body: some View {
         HStack {
@@ -22,25 +23,41 @@ struct HeaderView: View {
             Button {
                 runCamera.toggle()
             } label: {
-                Image(systemName: runCamera ? "stop.fill" : "play.fill")
-                    .font(.title)
+                HStack {
+                    Text (runCamera ? "Stop" : "Start")
+                    Image(systemName: runCamera ? "stop.fill" : "play.fill")
+                        .font(.title)
+                }
             }
             .focusable(false)
             .buttonStyle(.borderless)
-            .padding(.horizontal, 25)
-            .help("Start/stop camera")
+            .padding(.horizontal, 15)
+            .help("Start/stop selected camera")
             
             Toggle("B/W mode", isOn: $blackWhite)
                 .focusable(false)
                 .padding(.horizontal, 10)
                 .disabled(saveVideo)
+                .help("Black & White mode")
             
             Toggle("Save", isOn: $saveVideo)
                 .focusable(false)
                 .padding(.horizontal, 10)
                 .disabled(blackWhite || runCamera)
+                .help("Save video to file")
             
             Spacer()
+            
+            Button {
+                refreshList()
+            } label: {
+                Image(systemName: "arrow.clockwise")
+                    .font(.title2)
+            }
+            .padding(.horizontal, 5)
+            .focusable(false)
+            .buttonStyle(.borderless)
+            .help("Refresh connected cameras list")
             
             Text("Selected camera:")
                 .foregroundStyle(.gray)
@@ -51,7 +68,6 @@ struct HeaderView: View {
                 selectedCamera
             }
             .focusable(false)
-//            .menuIndicator(.hidden)
             .menuStyle(.borderlessButton)
             .padding(.trailing, 25)
             .frame(width: 300)
@@ -61,10 +77,18 @@ struct HeaderView: View {
         .frame(height: 35)
         .background(.clear)
         .padding(.bottom, 0)
+        .onAppear {
+            refreshList()
+        }
 
         Divider()
             .foregroundStyle(.gray)
             .padding(.top, -5)
+    }
+    
+    func refreshList() {
+        videoDevices.fetchCameras()
+        cameras = videoDevices.cameras
     }
     
     func camerasList() -> some View {
@@ -93,6 +117,7 @@ struct HeaderView: View {
             return Text("no camera selected")
         } else {
             return Text("\(camera!.localizedName) / \(camera!.isConnected ? "" : "not ")connected")
+//            return Text("\(camera!.localizedName)")
         }
     }
 }

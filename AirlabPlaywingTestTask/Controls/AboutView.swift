@@ -12,6 +12,10 @@ struct AboutView: View {
     
     var body: some View {
         VStack {
+            Text("Airlab & Playwing Test Task")
+                .font(.title)
+                .foregroundStyle(.gray.opacity(0.5))
+                .padding(.top, 100)
             Image("playstore")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -23,4 +27,8 @@ struct AboutView: View {
             runCamera = true
         }
     }
+}
+
+#Preview {
+    AboutView(runCamera: Binding.constant(false))
 }

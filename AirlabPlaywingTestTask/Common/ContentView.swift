@@ -11,7 +11,6 @@ import AVFoundation
 struct ContentView: View {
     
     @State var runCamera: Bool = false
-    @StateObject private var videoDevices = CameraListViewModel()
     private var cameraManager = CameraManager()
     @StateObject var settings = AppSettings()
     @State private var selectedID: String?
@@ -23,7 +22,6 @@ struct ContentView: View {
         VStack {
             HeaderView(
                 runCamera: $runCamera,
-                cameras: $videoDevices.cameras,
                 blackWhite: $blackWhite,
                 saveVideo: $saveVideo)
             
