@@ -5,6 +5,16 @@
 //  Created by Eugene Lysenko on 26.02.2025.
 //
 
+/*
+    Application controls bar.
+    Provides a control panel for managing camera operations and video recording.
+
+    - Toggles camera activation, black & white mode, and video saving.
+    - Refreshes and displays a list of available cameras.
+    - Shows the current camera selection with an option to update it.
+    - Saves camera selection.
+*/
+
 import SwiftUI
 import AVFoundation
 

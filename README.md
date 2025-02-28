@@ -29,7 +29,7 @@ This application demonstrates a basic video conferencing setup using macOS platf
 ## Application Interface
 Application controls are located on the horizontal bar at the top of the screen.
 
-1. **Start/Stop (▶) Button**  
+1. **Start/Stop (▶/⏹) Button**  
    Controls the live feed of the selected camera. You can also start the video feed by pressing the big blue camera icon in the center of the screen. Once the video stream starts, it is displayed in the application window. You can change the camera and toggle the black-and-white mode while the video feed is running.
 
 2. **Black/White Switch**  
@@ -42,7 +42,7 @@ Application controls are located on the horizontal bar at the top of the screen.
    Refreshes the list of available video cameras.
 
 5. **Selected Camera Dropdown**  
-   Lets you pick the current camera from the list.
+   Lets you pick the current camera from the list. Selected camera saves in application evironment between sessions.
 
 ## Approach & Challenges
 - **Device Integration**: We used `AVFoundation` to enumerate all video input devices and manage their connection states. A primary challenge was handling permissions and ensuring that changes in device selection were dynamically reflected in the preview.

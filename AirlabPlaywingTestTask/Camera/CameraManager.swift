@@ -5,6 +5,36 @@
 //  Created by Eugene Lysenko on 26.02.2025.
 //
 
+/*
+    Manages video and audio capture using AVCaptureSession and AVCaptureMovieFileOutput.
+
+    1. Session Setup:
+       - Detects and configures a user-selected camera if specified; otherwise defaults to
+         the built-in wide-angle camera.
+       - Optionally adds an audio input if the user has granted microphone permission
+         (AVCaptureDevice.authorizationStatus(for: .audio) == .authorized).
+       - Attaches a file output (AVCaptureMovieFileOutput) for video recording.
+
+    2. Session Control:
+       - toggleCamera(runCamera:selectedID:): Chooses whether to start or stop the session
+         and optionally reconfigures it if the device selection changes.
+       - startSession() / stopSession(): Starts or stops the running capture session.
+       - restartSession(): Stops the session, removes all inputs/outputs, then re-adds them,
+         accommodating device changes.
+
+    3. Recording Control:
+       - startRecording(to:): Begins recording to a specified URL if not already recording.
+       - stopRecording(): Ceases an active recording.
+       - AVCaptureFileOutputRecordingDelegate methods track the start and finish of recording,
+         logging any errors and the file URL.
+
+    4. Usage:
+       - Intended for SwiftUI or other UI frameworks. The session property (AVCaptureSession)
+         can be connected to UI components displaying live video.
+       - Provides a straightforward approach to switch cameras, manage authorization,
+         and handle file outputs in a clean, object-oriented manner.
+*/
+
 import AVFoundation
 import SwiftUI
 import Combine

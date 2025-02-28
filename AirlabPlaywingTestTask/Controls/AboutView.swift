@@ -4,6 +4,11 @@
 //
 //  Created by Eugene Lysenko on 28.02.2025.
 //
+
+/*
+    Displays an informational view with a title and an image.
+    A tap gesture activates the camera.
+*/
  
 import SwiftUI
 
@@ -12,7 +17,7 @@ struct AboutView: View {
     
     var body: some View {
         VStack {
-            Text("Airlab & Playwing Test Task")
+            Text("Airlab&Playwing Test Task")
                 .font(.title)
                 .foregroundStyle(.gray.opacity(0.5))
                 .padding(.top, 100)

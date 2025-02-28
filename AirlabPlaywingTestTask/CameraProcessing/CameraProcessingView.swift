@@ -5,6 +5,12 @@
 //  Created by Eugene Lysenko on 27.02.2025.
 //
 
+/*
+    Creates an NSViewRepresentable to manage camera processing
+    using a dedicated CameraProcessingManager, enabling device selection,
+    run toggling, and rendering a live video feed in SwiftUI.
+*/
+
 import SwiftUI
 import AppKit
 

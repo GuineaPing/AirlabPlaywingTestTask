@@ -5,6 +5,11 @@
 //  Created by Eugene Lysenko on 26.02.2025.
 //
 
+/*
+    Serves as the main entry point for the SwiftUI application,
+    configuring a window that hosts ContentView.
+*/
+
 import SwiftUI
 
 @main

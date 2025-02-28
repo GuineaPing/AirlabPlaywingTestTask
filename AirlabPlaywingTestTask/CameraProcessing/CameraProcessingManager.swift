@@ -5,6 +5,21 @@
 //  Created by Eugene Lysenko on 27.02.2025.
 //
 
+/*
+    Manages camera capture, applies a grayscale filter,
+    and provides a real-time video preview using AVCaptureSession.
+
+    1. Discovers and configures the chosen camera device:
+       - Uses the user-selected camera if provided, or falls back to a default camera.
+    2. Sets up the capture session with the device input and a video output for frame processing.
+    3. Processes each frame in the captureOutput(_:didOutput:from:) delegate method:
+       - Converts the frame to CIImage.
+       - Applies a grayscale filter by setting saturation to 0.
+       - Creates an NSImage from the filtered frame and updates the UI on the main thread.
+    4. Toggles the camera session on or off based on the isRun property
+       by starting or stopping the session and removing inputs when stopped.
+*/
+
 import AppKit
 import AVFoundation
 import CoreImage

@@ -8,6 +8,11 @@
 import SwiftUI
 import AVFoundation
 
+/*
+    Defines a SwiftUI view that leverages NSViewRepresentable
+    to display a real-time camera preview using an AVCaptureSession.
+*/
+
 struct CameraView: NSViewRepresentable {
     private let session: AVCaptureSession
 

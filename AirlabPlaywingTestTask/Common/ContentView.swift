@@ -5,6 +5,33 @@
 //  Created by Eugene Lysenko on 26.02.2025.
 //
 
+/*
+    Main window displays a SwiftUI-based interface for camera operations and recording:
+
+    1. Toggles Camera Modes:
+       - Normal Mode: Uses CameraView to show the default real-time camera preview.
+       - Black-and-White Mode: Utilizes CameraProcessingView for grayscale processing.
+
+    2. Recording Management:
+       - Allows the user to initiate or stop recording, contingent on the runCamera
+         and saveVideo toggles.
+       - Prompts for a save location via NSSavePanel, then checks and requests
+         security-scoped resource access.
+       - Removes any existing file at the selected location prior to recording.
+
+    3. Device and State Management:
+       - Observes AppSettings for a selected camera device and dynamically updates
+         when the user changes the device.
+       - Uses NotificationCenter to detect camera device changes.
+       - Automatically switches between normal and black-and-white modes, stopping
+         one session before starting the other.
+
+    4. UI Structure:
+       - A header control panel for toggles (runCamera, blackWhite, saveVideo).
+       - The appropriate camera view (normal or processed) when running.
+       - An AboutView placeholder for non-running state.
+*/
+
 import SwiftUI
 import AVFoundation
 
