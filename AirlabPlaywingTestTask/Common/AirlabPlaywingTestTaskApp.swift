@@ -6,7 +6,7 @@
 //
 
 /*
-    Serves as the main entry point for the SwiftUI application,
+    Serves as the main entry point,
     configuring a window that hosts ContentView.
 */
 
@@ -14,7 +14,6 @@ import SwiftUI
 
 @main
 struct AirlabPlaywingTestTaskApp: App {
-    
     var body: some Scene {
         WindowGroup("Test Task"){
             ContentView()

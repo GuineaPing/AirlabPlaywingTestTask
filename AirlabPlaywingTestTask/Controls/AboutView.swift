@@ -20,11 +20,14 @@ struct AboutView: View {
             Text("Airlab&Playwing Test Task")
                 .font(.title)
                 .foregroundStyle(.gray.opacity(0.5))
-                .padding(.top, 100)
+                .padding(.top, 50)
             Image("playstore")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 250, height: 250)
+                .frame(width: 300, height: 300)
+                .padding(0)
+            Text("v\(appVersion)")
+                .foregroundStyle(.gray.opacity(0.8))
                 .padding(.bottom, 50)
         }
         .containerShape(.rect)
@@ -32,8 +35,13 @@ struct AboutView: View {
             runCamera = true
         }
     }
+    
+    var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+    }
 }
 
 #Preview {
     AboutView(runCamera: Binding.constant(false))
+        .padding(20)
 }

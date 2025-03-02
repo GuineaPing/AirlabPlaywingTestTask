@@ -39,22 +39,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7A4EBB61-C06F-45D2-B39D-4844473284AE"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "AirlabPlaywingTestTask/CameraProcessing/CameraProcessingManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "toggleCamera()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "A8BB5A5A-1953-421F-BCCA-39AFA3A2C432"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -71,16 +55,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "3D3A4990-C3D8-44E1-8BEA-3B9C67819968"
+            uuid = "484372C6-B873-4BAA-8CF9-C48701EB4A3F"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AirlabPlaywingTestTask/Common/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
-            landmarkName = "pickSaveLocation(suggestedFileName:completion:)"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "checkAccess(url:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -38,12 +38,13 @@ import AVFoundation
 struct ContentView: View {
     
     @State var runCamera: Bool = false
-    private var cameraManager = CameraManager()
     @StateObject var settings = AppSettings()
     @State private var selectedID: String?
     @State var blackWhite: Bool  = false
     @State var processingRefresh: Bool = true
     @State var saveVideo: Bool = false
+    @State var fileURL: URL?
+    let baseHeight: CGFloat = 480
     
     var body: some View {
         VStack {
@@ -53,69 +54,84 @@ struct ContentView: View {
                 saveVideo: $saveVideo)
             
             Spacer()
-            if runCamera {
-                if blackWhite && processingRefresh {
-                    CameraProcessingView(selectedID: selectedID, isRun: blackWhite)
-                        .frame(width: 640, height: 480) // 400 x 300
-                        .aspectRatio(contentMode: .fit)
-                        .clipped()
-                } else {
-                    CameraView(session: cameraManager.session)
-                        .frame(width: 640, height: 480)
-                        .padding(.bottom, 20)
-                }
+            if runCamera && processingRefresh {
+                let resolution = deviceResolution(deviceID: selectedID)
+                let height = CGFloat(baseHeight)
+                let width = baseHeight * resolution.width / resolution.height
+                CameraContainerView(
+                        useGrayscale: $blackWhite,
+                        selectedID: $selectedID,
+                        isFeedRunning: $runCamera,
+                        fileURL: $fileURL)
+                    .aspectRatio(resolution, contentMode: .fit)
+                    .frame(width: width, height: height)
+                    .clipped()
+                    .cornerRadius(5)
+                    .shadow(radius: 15)
+                    .padding()
+                
             } else {
                 AboutView(runCamera: $runCamera)
             }
             Spacer()
         }
         .onChange(of: runCamera, {
-            toggleCamera()
-        })
-        .onChange(of: blackWhite, {
-            toggleCamera()
+            if runCamera && saveVideo {
+                selectFile()
+            }
         })
         .onReceive(NotificationCenter.default.publisher(for: .operationDeviceChanged)) { cameraID in
             if let cameraID = cameraID.object as? String {
                 selectedID = cameraID
-                toggleCamera()
             }
+            refreshView()
         }
         .onAppear {
             selectedID = settings.selectedID
         }
     }
     
-    func toggleCamera() {
-        
-        if blackWhite {
-            cameraManager.stopSession()
-            refreshProcessingView()
+    // get resolution for selected devoce
+    func deviceResolution(deviceID: String?) -> CGSize {
+        let discoverySession = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.builtInWideAngleCamera, .external],
+            mediaType: .video,
+            position: .unspecified
+        )
+        let devices = discoverySession.devices
+        var videoDevice: AVCaptureDevice?
+        if let selectedID = selectedID {
+            videoDevice = devices.first(where: { $0.uniqueID == selectedID })
         } else {
-            cameraManager.toggleCamera(runCamera: runCamera, selectedID: selectedID)
-            if runCamera {
-                selectFile()
-            }
+            videoDevice = AVCaptureDevice.default(for: .video)
         }
+        if videoDevice == nil {
+            return CGSize(width: CGFloat(640), height: CGFloat(480))
+        }
+        let dimensions = CMVideoFormatDescriptionGetDimensions(videoDevice!.activeFormat.formatDescription)
+        return CGSize(width: CGFloat(dimensions.width), height: CGFloat(dimensions.height))
     }
     
+    // select file for output
     func selectFile() {
-        if !saveVideo || !runCamera || blackWhite { return }
+        if !saveVideo || !runCamera { return }
         
         pickSaveLocation { url in
             guard let fileURL = url else {
                 print(">> canceled save panel or no URL returned.")
                 return
             }
+            print(">> main fileURL \(fileURL.relativePath)")
             checkAccess(url: fileURL)
-            cameraManager.startRecording(to: fileURL)
+
         }
     }
     
+    // check access output file
     func checkAccess(url: URL) {
         if url.startAccessingSecurityScopedResource() {
             // Write or record to that URL here
-            cameraManager.startRecording(to: url)
+            self.fileURL = url
             url.stopAccessingSecurityScopedResource()
         } else {
             print(">> couldn't access security-scoped resource.")
@@ -131,6 +147,7 @@ struct ContentView: View {
         }
     }
     
+    // pick output file name
     func pickSaveLocation(suggestedFileName: String = "Airtab-Playwing-Test.mov",
                           completion: @escaping (URL?) -> Void) {
         let panel = NSSavePanel()
@@ -147,13 +164,15 @@ struct ContentView: View {
         }
     }
     
-    func refreshProcessingView() {
+    // suppress blinking on change feed
+    func refreshView() {
         processingRefresh = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            processingRefresh = true
+            withAnimation {
+                processingRefresh = true
+            }
         }
     }
-    
 }
 
 #Preview {

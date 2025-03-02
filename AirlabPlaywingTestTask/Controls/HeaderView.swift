@@ -47,13 +47,13 @@ struct HeaderView: View {
             Toggle("B/W mode", isOn: $blackWhite)
                 .focusable(false)
                 .padding(.horizontal, 10)
-                .disabled(saveVideo)
+//                .disabled(saveVideo)
                 .help("Black & White mode")
             
             Toggle("Save", isOn: $saveVideo)
                 .focusable(false)
                 .padding(.horizontal, 10)
-                .disabled(blackWhite || runCamera)
+                .disabled(runCamera)
                 .help("Save video to file")
             
             Spacer()
